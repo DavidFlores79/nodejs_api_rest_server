@@ -1,20 +1,24 @@
 const express = require("express");
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const usersRoutes = require('../routes/users.routes')
+const usersRoutes = require('../routes/users.routes');
+const rolesRoutes = require('../routes/roles.routes');
+const { dbConnection } = require("../database/config");
 
 
 class Server {
   constructor() {
     this.app = express();
     this.port = process.env.PORT;
-    
+
+    //conectar a DB
+    this.conectarDB()
 
     //middlewares
-    this.middlewares();
+    this.middlewares()
 
     //rutas de mi aplicacion
-    this.routes();
+    this.routes()
   }
 
   middlewares() {
@@ -36,8 +40,13 @@ class Server {
     );
   }
 
+  async conectarDB() {
+    await dbConnection()
+  }
+
   routes() {
     this.app.use('/api/users', usersRoutes)
+    this.app.use('/api/roles', rolesRoutes)
   }
 
   listen() {
