@@ -22,6 +22,7 @@ router.put('/:id', [
     check('id', 'No es un id válido.').isMongoId(),
     check('id').custom( validateUserById ),
     check('role').custom( validateRole ),
+    //TODO: falta validar correo del mismo usuario que se esta actualizando
     Validator
 ], updateData);
 

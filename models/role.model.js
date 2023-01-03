@@ -9,6 +9,15 @@ const RoleSchema = Schema({
         type: Boolean,
         default: true
     },
+    deleted: {
+        type: Boolean,
+        default: false
+    },
 })
+
+RoleSchema.methods.toJSON = function () {
+    const { __v, password, ...data } = this.toObject()
+    return data
+}
 
 module.exports = model( 'Role', RoleSchema )

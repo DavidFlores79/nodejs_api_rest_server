@@ -1,9 +1,17 @@
+const roleModel = require('../models/role.model')
 const Role = require('../models/role.model')
 
-getData = (req, res) => {
+getData = async (req, res) => {
+
+    const { limite = 0, desde= 0 } = req.query
+
+    const data = await Role.find({ deleted: false, status: true })
+            .limit(limite)
+            .skip(desde)
 
     res.send({
-        message: 'Todos los registros',
+        total: data.length,
+        data
     })
 
 }
@@ -40,19 +48,50 @@ postData = async (req, res) => {
     }
 }
 
-updateData = (req, res) => {
+updateData = async (req, res) => {
     const { id } = req.params
-    res.send({
-       message: `Se ha actualizado el registro ${id}`,
-    });
+    const { _id, ...resto } = req.body
+
+    try {
+       
+        //guardar en la BD
+        const data = await roleModel.findByIdAndUpdate(id, resto)
+        res.send({
+           message: `Se ha actualizado el registro`,
+           data
+        });
+        
+    } catch (error) {   
+        console.log(error);
+        res.status(400).send({
+            message: 'Error al actualizar el registro',
+            error: error
+        })
+    }
+
 }
 
-deleteData = (req, res) => {
+deleteData = async (req, res) => {
     
     const { id } = req.params
-    res.send({
-       message: `Se ha eliminado el registro ${id}`,
-    });
+
+    try {
+        //guardar como eliminado en la BD
+        const data = await Role.findByIdAndUpdate(id, {
+            status: false,
+            deleted: true
+        })
+        res.send({
+           message: `Se ha eliminado el registro.`,
+           data
+        });        
+    } catch (error) {   
+        console.log(error);
+        res.status(400).send({
+            message: 'Error al eliminar el registro',
+            error: error
+        })
+    }
 }
 
 module.exports = { getData, postData, updateData, deleteData }

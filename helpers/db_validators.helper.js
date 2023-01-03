@@ -1,3 +1,4 @@
+const roleModel = require('../models/role.model');
 const Role = require('../models/role.model');
 const userModel = require('../models/user.model');
 
@@ -26,5 +27,22 @@ const validateEmail = async (email = '') => {
     }
 
 }
+const existRoleName = async (name = '', id) => {
 
-module.exports = { validateRole, validateEmail, validateUserById }
+    const existeName = await roleModel.findOne({ name })
+    if(existeName) {
+        throw new Error(`El rol ${ name } ya está registrado.`)
+    }
+
+}
+
+const validateRoleById = async ( id ) => {
+
+    const userExist = await roleModel.findById(id)
+    if(!userExist) {
+        throw new Error(`El role con el id: ${ id } no existe en BD.`)
+    }
+
+}
+
+module.exports = { validateRole, validateEmail, validateUserById, existRoleName, validateRoleById }
