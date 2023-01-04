@@ -19,22 +19,23 @@
   </head>
   <body>
     <div class="h-100 d-flex align-items-center justify-content-center">
-      <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+      <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3 text-center">
         <h1 class="m-4">Sign In!</h1>
+        <div
+          class="g_id_signin m-3"
+          data-type="standard"
+          data-theme="filled_blue"
+          data-size="large"
+          data-text="signin_with"
+          data-shape="circle"
+          data-width="280"
+          data-logo_alignment="left"
+        ></div>
         <div
           id="g_id_onload"
           data-client_id="863219590968-t3q65dptvnc643rep1cbqicqk6fcb1dm.apps.googleusercontent.com"
           data-auto_prompt="false"
           data-callback="handleCredentialResponse"
-        ></div>
-        <div
-          class="g_id_signin m-3"
-          data-type="standard"
-          data-size="large"
-          data-theme="outline"
-          data-text="sign_in_with"
-          data-shape="rectangular"
-          data-logo_alignment="left"
         ></div>
         <button class="btn btn-primary btn-block" id="sign-out">Salir</button>
       </div>
@@ -56,7 +57,7 @@
         .then(resp =>  {
             console.log(resp)
             localStorage.setItem('email', resp.user.email)
-            // location.reload()
+            location.reload()
         })
         .catch(err => console.log(err) )
       }
