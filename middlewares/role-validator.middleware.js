@@ -15,8 +15,8 @@ const checkRoleAuth = ( roles ) => async (req, res, next) => {
             console.log(`Perfil ${userData.role} no autorizado para la ruta ${req.baseUrl} con el metodo ${req.method}`);
         }
     } catch (error) {
-        res.status(401).send({message: 'Error: Perfil de Usuario No Autorizado'})
-        console.log(`Perfil ${userData.role} no autorizado para la ruta ${req.baseUrl} con el metodo ${req.method}`);
+        res.status(500).send({message: 'Error al obtener el Perfil de Usuario'})
+        console.log(`Error al obtener el Perfil de Usuario para la ruta ${req.baseUrl} con el metodo ${req.method}`);
     }
 
 }
