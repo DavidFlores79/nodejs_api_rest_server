@@ -38,7 +38,7 @@ postData = async (req, res) => {
         
     } catch (error) {   
         console.log(error);
-        res.status(400).send({
+        res.status(500).send({
             message: 'Error al guardar el registro',
             error: error
         })
@@ -58,7 +58,9 @@ updateData = async (req, res) => {
         }
         
         //guardar en la BD
-        const data = await userModel.findByIdAndUpdate(id, resto)
+        const data = await userModel.findByIdAndUpdate(id, resto, {
+            new: true
+        })
         res.send({
            message: `Se ha actualizado el registro`,
            data
@@ -66,7 +68,7 @@ updateData = async (req, res) => {
         
     } catch (error) {   
         console.log(error);
-        res.status(400).send({
+        res.status(500).send({
             message: 'Error al actualizar el registro',
             error: error
         })
@@ -81,15 +83,16 @@ deleteData = async (req, res) => {
     try {
         //guardar como eliminado en la BD
         const data = await userModel.findByIdAndUpdate(id, {
+            status: false,
             deleted: true
-        })
+        }, { new: true })
         res.send({
            message: `Se ha eliminado el registro.`,
            data
         });        
     } catch (error) {   
         console.log(error);
-        res.status(400).send({
+        res.status(500).send({
             message: 'Error al eliminar el registro',
             error: error
         })

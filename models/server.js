@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const usersRoutes = require('../routes/users.routes');
 const rolesRoutes = require('../routes/roles.routes');
+const authRoutes = require('../routes/auth.routes');
 const { dbConnection } = require("../database/config");
 
 
@@ -47,6 +48,7 @@ class Server {
   routes() {
     this.app.use('/api/users', usersRoutes)
     this.app.use('/api/roles', rolesRoutes)
+    this.app.use('/auth', authRoutes)
   }
 
   listen() {

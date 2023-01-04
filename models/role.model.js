@@ -3,6 +3,7 @@ const {  Schema, model } = require('mongoose')
 const RoleSchema = Schema({
     name: {
         type: String,
+        unique: [true, 'El nombre debe ser unico'],
         required: [true, 'El nombre es obligatorio']
     },
     status: {

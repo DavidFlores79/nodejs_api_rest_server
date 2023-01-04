@@ -15,7 +15,7 @@ router.post('/',[
 router.put('/:id', [
     check('id', 'No es un id válido.').isMongoId(),
     check('id').custom( validateRoleById ),
-    //TODO: falta validar correo del mismo usuario que se esta actualizando
+    check('name').custom( existRoleName ),
     Validator
 ], updateData);
 

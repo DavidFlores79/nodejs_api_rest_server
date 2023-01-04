@@ -19,19 +19,52 @@ const validateUserById = async ( id ) => {
     }
 }
 
-const validateEmail = async (email = '') => {
+const validateEmail = async (email = '', {req}) => {
 
+    const id = req.params.id
     const existeEmail = await userModel.findOne({ email })
-    if(existeEmail) {
-        throw new Error(`El correo ${ email } ya está registrado.`)
+
+    //valida si el registro a actualizar es el mismo que
+    //fue encontrado deja guardar el mismo valor
+    if(id && existeEmail) {
+        if(String(existeEmail._id) != id) {
+            throw new Error(`El correo ${ email } ya está registrado.`)
+        }
+    } else {
+        if(existeEmail) {
+            throw new Error(`El correo ${ email } ya está registrado.`)
+        }
     }
 
 }
-const existRoleName = async (name = '', id) => {
 
+const validateLoginEmail = async (email = '', {req}) => {
+
+    const existeEmail = await userModel.findOne({ email })
+
+    if(!existeEmail) {
+        throw new Error(`El email ${ email } no coincide con nuestros registros.`)
+    }
+
+}
+
+
+
+const existRoleName = async (name = '', {req}) => {
+
+    const id = req.params.id
     const existeName = await roleModel.findOne({ name })
-    if(existeName) {
-        throw new Error(`El rol ${ name } ya está registrado.`)
+    
+    //valida si el registro a actualizar es el mismo que
+    //fue encontrado deja guardar el mismo valor
+    if(id && existeName) {
+        if(String(existeName._id) != id) {
+            throw new Error(`El rol ${ name } ya está registrado.`)
+        }
+    } else {
+        if(existeName) {
+            throw new Error(`El rol ${ name } ya está registrado.`)
+        }
     }
 
 }
@@ -45,4 +78,4 @@ const validateRoleById = async ( id ) => {
 
 }
 
-module.exports = { validateRole, validateEmail, validateUserById, existRoleName, validateRoleById }
+module.exports = { validateRole, validateEmail, validateUserById, existRoleName, validateRoleById, validateLoginEmail }
