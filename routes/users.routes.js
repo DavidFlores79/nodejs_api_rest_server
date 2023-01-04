@@ -31,7 +31,7 @@ router.put('/:id', [
 
 router.delete('/:id', [
     validarJWT,
-    checkRoleAuth(['ADMIN_ROLE']),
+    checkRoleAuth(['SUPER_ROLE', 'ADMIN_ROLE']),
     check('id', 'No es un id válido.').isMongoId(),
     check('id').custom( validateUserById ),
     Validator
