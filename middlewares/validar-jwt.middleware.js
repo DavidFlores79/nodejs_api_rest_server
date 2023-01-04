@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { verifyToken } = require('../helpers/jwt.helper');
+const userModel = require('../models/user.model');
 
 const validarJWT = async (req, res, next) => {
 
@@ -8,16 +9,22 @@ const validarJWT = async (req, res, next) => {
         const tokenData = await verifyToken(token)
 
         if(tokenData._id) {
-            next()
+
+            usuario = await userModel.findById(tokenData._id)
+            if(!usuario.status || usuario.deleted || !usuario) {
+                res.status(401).send({ message: 'Usuario Bloqueado. Sin Permisos' })
+                console.log('Usuario Bloqueado. Sin Permisos');
+            } else {
+                next()
+            }
+
         } else {
-            res.status(401)
-            res.send({success: false, message: 'Usuario no autorizado'})
+            res.status(401).send({ message: 'Usuario no autorizado' })
         }
 
     } catch (error) {
 
-        res.status(401)
-        res.send({success: false, message: 'Usuario no autorizado'})
+        res.status(401).send({ message: 'Usuario no autorizado' })
         
     }
 

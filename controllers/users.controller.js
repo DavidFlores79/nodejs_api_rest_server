@@ -81,6 +81,7 @@ deleteData = async (req, res) => {
     const { id } = req.params
 
     try {
+
         //guardar como eliminado en la BD
         const data = await userModel.findByIdAndUpdate(id, {
             status: false,

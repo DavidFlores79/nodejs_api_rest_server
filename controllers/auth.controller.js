@@ -41,7 +41,7 @@ login = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
-        res.status(400).send({
+        return res.status(400).send({
             message: 'Error en el login!',
             error: error
         })
