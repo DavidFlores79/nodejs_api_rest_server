@@ -1,6 +1,6 @@
 const {  Schema, model } = require('mongoose')
 
-const RoleSchema = Schema({
+const CategorySchema = Schema({
     name: {
         type: String,
         unique: [true, 'El nombre debe ser unico'],
@@ -14,15 +14,20 @@ const RoleSchema = Schema({
         type: Boolean,
         default: false
     },
+    user_id: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'El id del usuario es obligatorio']
+    }
 },
 {
     versionKey: false,
     timestamps: true
 })
 
-RoleSchema.methods.toJSON = function () {
+CategorySchema.methods.toJSON = function () {
     const { __v, deleted, ...data } = this.toObject()
     return data
 }
 
-module.exports = model( 'Role', RoleSchema )
+module.exports = model( 'Category', CategorySchema )

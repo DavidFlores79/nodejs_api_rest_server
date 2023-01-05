@@ -36,11 +36,15 @@ const UserSchema = Schema({
     google: {
         type: Boolean,
         default: false
-    },
+    }
+},
+{
+    versionKey: false,
+    timestamps: true
 })
 
 UserSchema.methods.toJSON = function () {
-    const { __v, password, ...data } = this.toObject()
+    const { __v, password, deleted, ...data } = this.toObject()
     return data
 }
 

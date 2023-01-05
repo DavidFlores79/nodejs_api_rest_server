@@ -5,22 +5,25 @@ const userModel = require('../models/user.model');
 const validarJWT = async (req, res, next) => {
 
     try {
+        if(!req.headers.authorization) {
+            return res.status(401).send({message: 'No existe el token del Usuario'})
+        }
+
         const token = req.headers.authorization.split(' ').pop()
         const tokenData = await verifyToken(token)
 
-        if(tokenData._id) {
-
-            usuario = await userModel.findById(tokenData._id)
-            if(!usuario.status || usuario.deleted || !usuario) {
-                res.status(401).send({ message: 'Usuario Bloqueado. Sin Permisos' })
-                console.log('Usuario Bloqueado. Sin Permisos');
-            } else {
-                next()
-            }
-
-        } else {
-            res.status(401).send({ message: 'Usuario no autorizado' })
+        if(!tokenData) {
+            return res.status(401).send({ message: 'Token no válido. ***' })
         }
+
+        usuario = await userModel.findById(tokenData._id)
+        if(!usuario.status || usuario.deleted || !usuario) {
+            res.status(401).send({ message: 'Usuario Bloqueado. Sin Permisos' })
+            console.log('Usuario Bloqueado. Sin Permisos');
+        } else {
+            next()
+        }
+
 
     } catch (error) {
 

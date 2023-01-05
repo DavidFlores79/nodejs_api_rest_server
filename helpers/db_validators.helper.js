@@ -1,4 +1,5 @@
 const roleModel = require('../models/role.model');
+const categoryModel = require('../models/category.model');
 const Role = require('../models/role.model');
 const userModel = require('../models/user.model');
 
@@ -69,6 +70,25 @@ const existRoleName = async (name = '', {req}) => {
 
 }
 
+const existCategoryName = async (name = '', {req}) => {
+
+    const id = req.params.id
+    const existeName = await categoryModel.findOne({ name })
+    
+    //valida si el registro a actualizar es el mismo que
+    //fue encontrado deja guardar el mismo valor
+    if(id && existeName) {
+        if(String(existeName._id) != id) {
+            throw new Error(`La categoría ${ name } ya está registrada.`)
+        }
+    } else {
+        if(existeName) {
+            throw new Error(`La categoría ${ name } ya está registrada.`)
+        }
+    }
+
+}
+
 const validateRoleById = async ( id ) => {
 
     const userExist = await roleModel.findById(id)
@@ -78,4 +98,13 @@ const validateRoleById = async ( id ) => {
 
 }
 
-module.exports = { validateRole, validateEmail, validateUserById, existRoleName, validateRoleById, validateLoginEmail }
+const validateCategoryById = async ( id ) => {
+
+    const categoryExist = await categoryModel.findById(id)
+    if(!categoryExist) {
+        throw new Error(`La categoría con el id: ${ id } no existe en BD.`)
+    }
+
+}
+
+module.exports = { validateRole, validateEmail, validateUserById, existRoleName, validateRoleById, validateLoginEmail, existCategoryName, validateCategoryById }

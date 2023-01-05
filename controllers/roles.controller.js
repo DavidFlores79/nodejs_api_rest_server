@@ -19,7 +19,7 @@ getData = async (req, res) => {
 postData = async (req, res) => {
 
     const { name, status } = req.body
-    const role = new Role({ name, status })
+    const role = await new Role({ name, status })
     
     try {
 
@@ -43,7 +43,7 @@ postData = async (req, res) => {
         console.log(error);
         res.status(500).send({
             message: 'Error al guardar el registro',
-            error: error
+            error
         })
     }
 }
@@ -67,7 +67,7 @@ updateData = async (req, res) => {
         console.log(error);
         res.status(500).send({
             message: 'Error al actualizar el registro',
-            error: error
+            error
         })
     }
 
@@ -91,7 +91,7 @@ deleteData = async (req, res) => {
         console.log(error);
         res.status(500).send({
             message: 'Error al eliminar el registro',
-            error: error
+            error
         })
     }
 }

@@ -20,7 +20,7 @@ getData = async (req, res) => {
 postData = async (req, res) => {
 
     const { name, email, password, role } = req.body
-    const data = new User({ name, email, password, role })
+    const data = await new User({ name, email, password, role })
     
     try {
 
@@ -40,7 +40,7 @@ postData = async (req, res) => {
         console.log(error);
         res.status(500).send({
             message: 'Error al guardar el registro',
-            error: error
+            error
         })
     }
 }
@@ -70,7 +70,7 @@ updateData = async (req, res) => {
         console.log(error);
         res.status(500).send({
             message: 'Error al actualizar el registro',
-            error: error
+            error
         })
     }
 
@@ -95,7 +95,7 @@ deleteData = async (req, res) => {
         console.log(error);
         res.status(500).send({
             message: 'Error al eliminar el registro',
-            error: error
+            error
         })
     }
 }

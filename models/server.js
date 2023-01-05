@@ -1,10 +1,13 @@
 const express = require("express");
-const bodyParser = require('body-parser')
 const cors = require('cors')
+const { dbConnection } = require("../database/config");
+const bodyParser = require('body-parser')
+
 const usersRoutes = require('../routes/users.routes');
 const rolesRoutes = require('../routes/roles.routes');
+const categoriesRoutes = require('../routes/categories.routes');
+const productsRoutes = require('../routes/products.routes');
 const authRoutes = require('../routes/auth.routes');
-const { dbConnection } = require("../database/config");
 
 
 class Server {
@@ -48,6 +51,8 @@ class Server {
   routes() {
     this.app.use('/api/users', usersRoutes)
     this.app.use('/api/roles', rolesRoutes)
+    this.app.use('/api/categories', categoriesRoutes)
+    this.app.use('/api/products', productsRoutes)
     this.app.use('/auth', authRoutes)
   }
 
