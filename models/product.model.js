@@ -17,7 +17,7 @@ const ProductSchema = Schema({
         type: Boolean,
         default: false
     },
-    createdBy: {
+    user_id: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: [true, 'El id del usuario es obligatorio']
@@ -46,4 +46,4 @@ ProductSchema.methods.toJSON = function () {
     return data
 }
 
-module.exports = model( 'Category', ProductSchema )
+module.exports = model( 'Product', ProductSchema )

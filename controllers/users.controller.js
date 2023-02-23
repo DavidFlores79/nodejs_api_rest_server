@@ -47,7 +47,7 @@ postData = async (req, res) => {
 
 updateData = async (req, res) => {
     const { id } = req.params
-    const { _id, password, google, email, ...resto } = req.body
+    const { _id, password, google, ...resto } = req.body
 
     try {
 

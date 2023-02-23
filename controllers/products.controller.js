@@ -1,14 +1,14 @@
 const { verifyToken } = require('../helpers/jwt.helper')
-const categoryModel = require('../models/category.model')
-const Category = require('../models/category.model')
+const productModel = require('../models/product.model')
 const userModel = require('../models/user.model')
 
 getData = async (req, res) => {
 
     const { limite = 0, desde= 0 } = req.query
 
-    const data = await categoryModel.find({ deleted: false, status: true })
+    const data = await productModel.find({ deleted: false, status: true })
             .populate('user_id', ['name', 'email'])
+            .populate('category')
             .limit(limite)
             .skip(desde)
 
@@ -21,17 +21,17 @@ getData = async (req, res) => {
 
 postData = async (req, res) => {
 
-    const { name  } = req.body
+    const { name, category, status, available  } = req.body
     let NAME = name.toUpperCase()
-    const category = await new categoryModel({ name: NAME })
+    const product = await new productModel({ name: NAME, category: category, status: status, available }).populate('category')
     
     try {
 
-        //validar si existe La categoría
-        const categoryExist = await categoryModel.findOne({ name: NAME })
-        if( categoryExist) {
+        //validar si existe el registro
+        const productExist = await productModel.findOne({ name: NAME })
+        if( productExist) {
             return res.status(400).send({
-                message: 'La categoría ya esta registrada.'
+                message: 'El nombre ya esta registrado.'
             })
         }
         
@@ -50,16 +50,16 @@ postData = async (req, res) => {
         } else {
 
             //id del usuario logueado
-            category.user_id = tokenData._id 
-            //console.log(category);
+            product.user_id = tokenData._id 
+            //console.log(product);
 
             //guardar en la BD
-            await category.save()
+            await product.save()
         }    
 
         res.status(201).send({
             message: 'Registro creado correctamente.',
-            category
+            product
         });
         
     } catch (error) {   
@@ -74,14 +74,14 @@ postData = async (req, res) => {
 updateData = async (req, res) => {
     const { id } = req.params
     const { _id, ...resto } = req.body
-    resto.name = resto.name.toUpperCase()
 
     try {
        
         //guardar en la BD
-        const data = await categoryModel.findByIdAndUpdate(id, resto, {
+        const data = await productModel.findByIdAndUpdate(id, resto, {
             new: true
-        })
+        }).populate('category').populate('user_id', ['name', 'email'])
+        
         res.send({
            message: `Se ha actualizado el registro`,
            data
@@ -103,7 +103,7 @@ deleteData = async (req, res) => {
 
     try {
         //guardar como eliminado en la BD
-        const data = await categoryModel.findByIdAndUpdate(id, {
+        const data = await productModel.findByIdAndUpdate(id, {
             status: false,
             deleted: true
         }, { new: true })

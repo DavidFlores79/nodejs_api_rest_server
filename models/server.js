@@ -1,14 +1,16 @@
 const express = require("express");
-const cors = require('cors')
+const cors = require("cors");
 const { dbConnection } = require("../database/config");
-const bodyParser = require('body-parser')
+const bodyParser = require("body-parser");
 
-const usersRoutes = require('../routes/users.routes');
-const rolesRoutes = require('../routes/roles.routes');
-const categoriesRoutes = require('../routes/categories.routes');
-const productsRoutes = require('../routes/products.routes');
-const authRoutes = require('../routes/auth.routes');
-
+const usersRoutes = require("../routes/users.routes");
+const rolesRoutes = require("../routes/roles.routes");
+const categoriesRoutes = require("../routes/categories.routes");
+const productsRoutes = require("../routes/products.routes");
+const authRoutes = require("../routes/auth.routes");
+const searchRoutes = require("../routes/search.routes");
+const uploadRoutes = require("../routes/uploads.routes");
+const fileUpload = require("express-fileupload");
 
 class Server {
   constructor() {
@@ -16,20 +18,20 @@ class Server {
     this.port = process.env.PORT;
 
     //conectar a DB
-    this.conectarDB()
+    this.conectarDB();
 
     //middlewares
-    this.middlewares()
+    this.middlewares();
 
     //rutas de mi aplicacion
-    this.routes()
+    this.routes();
   }
 
   middlewares() {
     //directorio public
     this.app.use(express.static("public"));
 
-    this.app.use(cors())
+    this.app.use(cors());
     this.app.use(express.json());
     this.app.use(
       bodyParser.json({
@@ -42,18 +44,27 @@ class Server {
         extended: true,
       })
     );
+
+    this.app.use(
+      fileUpload({
+        useTempFiles: true,
+        tempFileDir: "/tmp/",
+      })
+    );
   }
 
   async conectarDB() {
-    await dbConnection()
+    await dbConnection();
   }
 
   routes() {
-    this.app.use('/api/users', usersRoutes)
-    this.app.use('/api/roles', rolesRoutes)
-    this.app.use('/api/categories', categoriesRoutes)
-    this.app.use('/api/products', productsRoutes)
-    this.app.use('/auth', authRoutes)
+    this.app.use("/api/users", usersRoutes);
+    this.app.use("/api/roles", rolesRoutes);
+    this.app.use("/api/categories", categoriesRoutes);
+    this.app.use("/api/products", productsRoutes);
+    this.app.use("/auth", authRoutes);
+    this.app.use("/api/search", searchRoutes);
+    this.app.use("/api/upload", uploadRoutes);
   }
 
   listen() {
