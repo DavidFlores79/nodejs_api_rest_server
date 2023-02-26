@@ -9,6 +9,10 @@ const ProductSchema = Schema({
     description: {
         type: String,
     },
+    image: {
+        type: String,
+        default: 'placeholder.png'
+    },
     price: {
         type: Number,
         default: 0.0

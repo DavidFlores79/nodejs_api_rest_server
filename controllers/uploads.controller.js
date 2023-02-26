@@ -1,20 +1,26 @@
+const path = require('path')
+const fs = require('fs')
 const { uploadFiles } = require('../helpers/uploads.helper');
+const userModel = require('../models/user.model');
+const productModel = require('../models/product.model');
+
 
 const uploadFile = async (req, res) => {
 
   if (!req.files || Object.keys(req.files).length === 0 || !req.files.archivo) {
-    res.status(404).send("No hay archivo para carga.")
-    return
+    return res.status(404).send({ message: 'No hay archivo para carga.'})
   }
   console.log("req.files >>>", req.files); // eslint-disable-line
   
   try {
     //   const { nombre, fullPath } = await uploadFiles(req.files, 'documents', ['txt', 'csv']);
-      const { nombre, fullPath } = await uploadFiles(req.files, 'users');
-    
+      const { nombre, fullPath } = await uploadFiles(req.files, 'files', ['txt', 'csv']);
+
       res.status(201).send({
-        message: `Archivo guardado: ${nombre}`
-      })    
+        message: `Archivo Cargado: ${nombre}`,
+        data: nombre
+      })
+         
   } catch (error) {
     res.status(400).send({
         message: error
@@ -23,4 +29,112 @@ const uploadFile = async (req, res) => {
 
 };
 
-module.exports = { uploadFile };
+const updateImage = async (req, res) => {
+
+    const { coleccion, id } = req.params;
+
+    if (!req.files || Object.keys(req.files).length === 0 || !req.files.archivo) {
+      return res.status(404).send({ message: 'No hay archivo para carga.'})
+    }
+
+    // console.log("req.files >>>", req.files); // eslint-disable-line
+
+    let modelo;
+    // console.log('coleccion', coleccion);
+
+    switch (coleccion) {
+      case 'users':
+        modelo = await userModel.findById(id)
+        if(!modelo) {
+          return res.status(404).send({ message: `El usuario con id: ${id} no existe en la BD.`})
+        }
+        break;
+        // console.log(user);
+      case 'products':
+        modelo = await productModel.findById(id)
+        if(!modelo) {
+          return res.status(404).send({ message: `El producto con id: ${id} no existe en la BD.`})
+        }
+        // console.log(product);
+        break;
+      default:
+        return res.status(500).send({ message: 'Esta coleccion no está permitida para carga de archivos.'})
+    }
+    
+    try {
+
+        //const { nombre, uploadPath } = await uploadFiles(req.files, 'documents', ['txt', 'csv']);
+        const { nombre, uploadPath } = await uploadFiles(req.files, coleccion);
+
+        //una vez cargado el archivo puedo borrar el anterior
+        if(modelo.image) {
+          const pathImage = path.join(__dirname, '../uploads/', coleccion, modelo.image)
+          if(fs.existsSync(pathImage)) {
+            fs.unlinkSync(pathImage)
+          }
+        }
+
+        //actualizamos el nombre en BD
+        modelo.image = nombre
+        modelo.save()
+    
+        res.status(201).send({
+          message: `Imagen actualizada: ${nombre}`,
+          data: modelo
+        })
+           
+    } catch (error) {
+      res.status(400).send({
+        message: error
+      })
+    }
+
+}
+
+const showImage = async (req, res) => {
+
+  const { coleccion, id } = req.params;
+
+    let modelo;
+    // console.log('coleccion', coleccion);
+
+    switch (coleccion) {
+      case 'users':
+        modelo = await userModel.findById(id)
+        if(!modelo) {
+          return res.status(404).send({ message: `El usuario con id: ${id} no existe en la BD.`})
+        }
+        break;
+        // console.log(user);
+      case 'products':
+        modelo = await productModel.findById(id)
+        if(!modelo) {
+          return res.status(404).send({ message: `El producto con id: ${id} no existe en la BD.`})
+        }
+        // console.log(product);
+        break;
+      default:
+        return res.status(500).send({ message: 'Esta coleccion no está permitida para carga de archivos.'})
+    }
+    
+    try {
+
+        //si la imagen existe en el id solicitado
+        if(modelo.image) {
+          const pathImage = path.join(__dirname, '../uploads/', coleccion, modelo.image)
+          if(fs.existsSync(pathImage)) {
+            return res.sendFile( pathImage )
+          }
+        }
+
+        const noImagePath = path.join(__dirname, '../assets/images/', 'no-image.png')
+        return res.sendFile( noImagePath )
+           
+    } catch (error) {
+      res.status(500).send({
+        message: error
+      })
+    }
+}
+
+module.exports = { uploadFile, updateImage, showImage };

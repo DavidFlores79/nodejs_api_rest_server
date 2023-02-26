@@ -136,7 +136,21 @@ const validateCategoryById = async ( id ) => {
 
 }
 
-module.exports = { validateRole, 
+const coleccionesPermitidas = ( coleccion = '', colecciones = []  ) => {
+    
+    //   Validar la coleccion
+    if( !colecciones.includes(coleccion) ) {
+
+        throw new Error(`La colección ${coleccion} no está permitida. Sólo ${colecciones}`)
+    
+    }
+
+    return true;
+
+}
+
+module.exports = { 
+    validateRole, 
     validateEmail, 
     validateUserById, 
     existRoleName, 
@@ -146,4 +160,5 @@ module.exports = { validateRole,
     validateCategoryById, 
     existProductName, 
     validateProductById,
+    coleccionesPermitidas
 }
