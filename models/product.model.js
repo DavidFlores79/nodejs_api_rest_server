@@ -11,7 +11,7 @@ const ProductSchema = Schema({
     },
     image: {
         type: String,
-        default: 'placeholder.png'
+        default: 'https://res.cloudinary.com/dltvxi4tm/image/upload/v1680155130/products/up8ji7twwgvk41k5vgrm.png'
     },
     price: {
         type: Number,
