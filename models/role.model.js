@@ -4,7 +4,8 @@ const RoleSchema = Schema({
     name: {
         type: String,
         unique: [true, 'El nombre debe ser unico'],
-        required: [true, 'El nombre es obligatorio']
+        required: [true, 'El nombre es obligatorio'],
+        // enum : ['USER_ROLE','ADMIN_ROLE','VENTAS_ROLE'],
     },
     status: {
         type: Boolean,
