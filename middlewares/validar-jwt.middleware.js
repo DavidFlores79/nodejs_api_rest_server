@@ -6,20 +6,32 @@ const validarJWT = async (req, res, next) => {
 
     try {
         if(!req.headers.authorization) {
-            return res.status(401).send({message: 'No existe el token del Usuario'})
+            return res.status(401).send({
+                errors: [{
+                    msg: 'No existe el token de usuario.'
+                }]
+            })
         }
 
         const token = req.headers.authorization.split(' ').pop()
         const tokenData = await verifyToken(token)
 
         if(!tokenData) {
-            return res.status(401).send({ message: 'Token no válido. ***' })
+            return res.status(401).send({
+                errors: [{
+                    msg: 'Token no válido.'
+                }]
+            })
         }
 
         usuario = await userModel.findById(tokenData._id)
         if(!usuario.status || usuario.deleted || !usuario) {
-            res.status(401).send({ message: 'Usuario Bloqueado. Sin Permisos' })
             console.log('Usuario Bloqueado. Sin Permisos');
+            return res.status(401).send({
+                errors: [{
+                    msg: 'Usuario Bloqueado Sin Permisos.'
+                }]
+            })
         } else {
             next()
         }
@@ -27,7 +39,11 @@ const validarJWT = async (req, res, next) => {
 
     } catch (error) {
 
-        res.status(401).send({ message: 'Usuario no autorizado' })
+        res.status(401).send({
+            errors: [{
+                msg: 'Usuario No Autorizado.'
+            }]
+        })
         
     }
 

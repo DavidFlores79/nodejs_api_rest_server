@@ -43,8 +43,9 @@ const login = async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(400).send({
-            message: 'Error en el login!',
-            error: error
+            errors: [{
+                msg: 'Error en el login'
+            }]
         })
     }
 
@@ -108,8 +109,9 @@ const googleSignIn = async(req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(401).send({
-            message: 'Error en Google SignIn!',
-            error: error
+            errors: [{
+                msg: 'Error en Google SignIn!'
+            }]
         })
         
     }

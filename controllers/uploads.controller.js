@@ -31,9 +31,12 @@ const uploadFile = async (req, res) => {
       })
          
   } catch (error) {
-    res.status(400).send({
-        message: error
-      })
+    console.log(error);
+    res.status(500).send({
+      errors: [{
+          msg: 'Error al cargar el archivo.'
+      }]
+    })
   }
 
 };
@@ -93,8 +96,10 @@ const uploadImage = async (req, res) => {
         })
            
     } catch (error) {
-      res.status(400).send({
-        message: error
+      res.status(500).send({
+        errors: [{
+            msg: 'Error al actualizar el registro.'
+        }]
       })
     }
 
@@ -157,8 +162,11 @@ const uploadImageCloudinary = async (req, res) => {
         })
            
     } catch (error) {
+      console.log(error);
       res.status(500).send({
-        message: error
+        errors: [{
+            msg: 'Error al actualizar el registro.'
+        }]
       })
     }
 
@@ -204,8 +212,11 @@ const showImage = async (req, res) => {
         return res.sendFile( noImagePath )
            
     } catch (error) {
+      console.log(error);
       res.status(500).send({
-        message: error
+        errors: [{
+            msg: 'Error al mostrar el registro.'
+        }]
       })
     }
 }

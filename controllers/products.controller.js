@@ -21,9 +21,9 @@ getData = async (req, res) => {
 
 postData = async (req, res) => {
 
-    const { name, category, status, available  } = req.body
+    const { name, category, status, price, available  } = req.body
     let NAME = name.toUpperCase()
-    const product = await new productModel({ name: NAME, category: category, status: status, available }).populate('category')
+    const product = await new productModel({ name: NAME, category: category, status: status, price, available }).populate('category')
     
     try {
 
@@ -65,8 +65,9 @@ postData = async (req, res) => {
     } catch (error) {   
         console.log(error);
         res.status(500).send({
-            message: 'Error al guardar el registro',
-            error
+            errors: [{
+                msg: 'Error al guardar el registro.'
+            }]
         })
     }
 }
@@ -90,8 +91,9 @@ updateData = async (req, res) => {
     } catch (error) {   
         console.log(error);
         res.status(500).send({
-            message: 'Error al actualizar el registro',
-            error
+            errors: [{
+                msg: 'Error al actualizar el registro.'
+            }]
         })
     }
 
@@ -114,8 +116,9 @@ deleteData = async (req, res) => {
     } catch (error) {   
         console.log(error);
         res.status(500).send({
-            message: 'Error al eliminar el registro',
-            error: error
+            errors: [{
+                msg: 'Error al eliminar el registro.'
+            }]
         })
     }
 }

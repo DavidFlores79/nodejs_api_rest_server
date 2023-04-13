@@ -29,18 +29,19 @@ postData = async (req, res) => {
         data.password = bcrypt.hashSync(password, salt)
         
         //guardar en la BD
-        await data.save()
+        await data1.save()
 
         res.status(201).send({
             message: 'Registro creado correctamente.',
             data
         });
         
-    } catch (error) {   
+    } catch (error) {
         console.log(error);
         res.status(500).send({
-            message: 'Error al guardar el registro',
-            error
+            errors: [{
+                msg: 'Error al guardar el registro'
+            }]
         })
     }
 }
@@ -69,8 +70,9 @@ updateData = async (req, res) => {
     } catch (error) {   
         console.log(error);
         res.status(500).send({
-            message: 'Error al actualizar el registro',
-            error
+            errors: [{
+                msg: 'Error al actualizar el registro.'
+            }]
         })
     }
 
@@ -94,8 +96,9 @@ deleteData = async (req, res) => {
     } catch (error) {   
         console.log(error);
         res.status(500).send({
-            message: 'Error al eliminar el registro',
-            error
+            errors: [{
+                msg: 'Error al eliminar el registro.'
+            }]
         })
     }
 }

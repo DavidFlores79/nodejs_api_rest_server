@@ -24,7 +24,11 @@ const checkRoleAuth = ( roles ) => async (req, res, next) => {
         }
 
     } catch (error) {
-        res.status(500).send({message: 'Error al obtener el Perfil de Usuario'})
+        res.status(500).send({
+            errors: [{
+                msg: 'Error al obtener el perfil del usuario.'
+            }]
+        })
         console.log(`Error al obtener el Perfil de Usuario para la ruta ${req.baseUrl} con el metodo ${req.method}. ${error}`);
     }
 
