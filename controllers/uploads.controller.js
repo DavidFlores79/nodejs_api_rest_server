@@ -17,7 +17,7 @@ cloudinary.config({
 const uploadFile = async (req, res) => {
 
   if (!req.files || Object.keys(req.files).length === 0 || !req.files.archivo) {
-    return res.status(404).send({ message: 'No hay archivo para carga.'})
+    return res.status(404).send({ errors: [{ msg: 'No hay archivo para carga.' }] })
   }
   console.log("req.files >>>", req.files); // eslint-disable-line
   
@@ -26,7 +26,7 @@ const uploadFile = async (req, res) => {
       const { nombre, fullPath } = await uploadFiles(req.files, 'files', ['txt', 'csv']);
 
       res.status(201).send({
-        message: `Archivo Cargado: ${nombre}`,
+        msg: `Archivo Cargado: ${nombre}`,
         data: nombre
       })
          
@@ -46,7 +46,7 @@ const uploadImage = async (req, res) => {
     const { coleccion, id } = req.params;
 
     if (!req.files || Object.keys(req.files).length === 0 || !req.files.archivo) {
-      return res.status(404).send({ message: 'No hay archivo para carga.'})
+      return res.status(404).send({ errors: [{ msg: 'No hay archivo para carga.' }] })
     }
 
     // console.log("req.files >>>", req.files); // eslint-disable-line
@@ -58,19 +58,19 @@ const uploadImage = async (req, res) => {
       case 'users':
         modelo = await userModel.findById(id)
         if(!modelo) {
-          return res.status(404).send({ message: `El usuario con id: ${id} no existe en la BD.`})
+          return res.status(404).send({ errors: [{ msg: `El usuario con id: ${id} no existe en la BD.` }] })
         }
         break;
         // console.log(user);
       case 'products':
         modelo = await productModel.findById(id)
         if(!modelo) {
-          return res.status(404).send({ message: `El producto con id: ${id} no existe en la BD.`})
+          return res.status(404).send({ errors: [{ msg: `El producto con id: ${id} no existe en la BD.` }] })
         }
         // console.log(product);
         break;
       default:
-        return res.status(500).send({ message: 'Esta coleccion no está permitida para carga de archivos.'})
+        return res.status(500).send({ errors: [{ msg: `Esta colección no esta permitida para carga de archivos` }] })
     }
     
     try {
@@ -91,7 +91,7 @@ const uploadImage = async (req, res) => {
         modelo.save()
     
         res.status(201).send({
-          message: `Imagen actualizada: ${nombre}`,
+          msg: `Imagen actualizada: ${nombre}`,
           data: modelo
         })
            
@@ -110,7 +110,7 @@ const uploadImageCloudinary = async (req, res) => {
     const { coleccion, id } = req.params;
 
     if (!req.files || Object.keys(req.files).length === 0 || !req.files.archivo) {
-      return res.status(404).send({ message: 'No hay archivo para carga.'})
+      return res.status(404).send({ errors: [{ msg: `No hay archivo para carga.` }] })
     }
 
     //archivo temporal que se guarda al cargar
@@ -123,19 +123,19 @@ const uploadImageCloudinary = async (req, res) => {
       case 'users':
         modelo = await userModel.findById(id)
         if(!modelo) {
-          return res.status(404).send({ message: `El usuario con id: ${id} no existe en la BD.`})
+          return res.status(404).send({ errors: [{ msg: `El usuario con id: ${id} no existe en la BD.` }] })
         }
         break;
         // console.log(user);
       case 'products':
         modelo = await productModel.findById(id)
         if(!modelo) {
-          return res.status(404).send({ message: `El producto con id: ${id} no existe en la BD.`})
+          return res.status(404).send({ errors: [{ msg: `El producto con id: ${id} no existe en la BD.` }] })
         }
         // console.log(product);
         break;
       default:
-        return res.status(500).send({ message: 'Esta coleccion no está permitida para carga de archivos.'})
+        return res.status(500).send({ errors: [{ msg: `Esta colección no está permitida para carga de archivos.` }] })
     }
     
     try {
@@ -157,7 +157,7 @@ const uploadImageCloudinary = async (req, res) => {
         modelo.save()
     
         return res.status(201).send({
-          message: `Imagen cargada ó actualizada.`,
+          msg: `Imagen cargada ó actualizada.`,
           data: secure_url
         })
            
@@ -183,19 +183,19 @@ const showImage = async (req, res) => {
       case 'users':
         modelo = await userModel.findById(id)
         if(!modelo) {
-          return res.status(404).send({ message: `El usuario con id: ${id} no existe en la BD.`})
+          return res.status(404).send({ errors: [{ msg: `El usuario con id: ${id} no existe en la BD.` }] })
         }
         break;
         // console.log(user);
       case 'products':
         modelo = await productModel.findById(id)
         if(!modelo) {
-          return res.status(404).send({ message: `El producto con id: ${id} no existe en la BD.`})
+          return res.status(404).send({ errors: [{ msg: `El producto con id: ${id} no existe en la BD.` }] })
         }
         // console.log(product);
         break;
       default:
-        return res.status(500).send({ message: 'Esta coleccion no está permitida para carga de archivos.'})
+        return res.status(500).send({ errors: [{ msg: `Esta colección no está permitida para carga de archivos.` }] })
     }
     
     try {

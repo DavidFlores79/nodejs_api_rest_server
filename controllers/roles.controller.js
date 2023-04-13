@@ -26,23 +26,21 @@ postData = async (req, res) => {
         //validar si existe el rol
         const roleExist = await Role.findOne({ name })
         if( roleExist) {
-            return res.status(400).send({
-                message: 'El rol ya esta registrado.'
-            })
+            return res.status(400).send({ errors: [{ msg: 'El rol ya está registrado.' }] })
         }
            
         //guardar en la BD
         await role.save()
 
         res.status(201).send({
-            message: 'Registro creado correctamente.',
+            msg: 'Registro creado correctamente.',
             role
         });
         
     } catch (error) {   
         console.log(error);
         res.status(500).send({
-            message: 'Error al guardar el registro',
+            msg: 'Error al guardar el registro',
             error
         })
     }
@@ -59,14 +57,14 @@ updateData = async (req, res) => {
             new: true
         })
         res.send({
-           message: `Se ha actualizado el registro`,
+           msg: `Se ha actualizado el registro`,
            data
         });
         
     } catch (error) {   
         console.log(error);
         res.status(500).send({
-            message: 'Error al actualizar el registro',
+            msg: 'Error al actualizar el registro',
             error
         })
     }
@@ -84,13 +82,13 @@ deleteData = async (req, res) => {
             deleted: true
         }, { new: true })
         res.send({
-           message: `Se ha eliminado el registro.`,
+           msg: `Se ha eliminado el registro.`,
            data
         });        
     } catch (error) {   
         console.log(error);
         res.status(500).send({
-            message: 'Error al eliminar el registro',
+            msg: 'Error al eliminar el registro',
             error
         })
     }

@@ -93,11 +93,7 @@ const searchProductsByCategory = async (termino, res) => {
  
         if ( !categories.length ){
  
-            return res.status(400).json({
- 
-                msg: `No hay resultados para ${ termino }`
- 
-            });
+            return res.status(400).json({ errors: [{ msg: `No hay resultados para ${termino}.` }] });
         }
         
         const products = await productModel.find({
@@ -160,9 +156,7 @@ searchData = async (req, res) => {
 
 
     if(!colecciones.includes(coleccion)) {
-        return res.status(400).json({
-            message: `Las colecciones permitidas son ${colecciones}`
-        })
+        return res.status(400).json({ errors: [{ msg: 'Las colecciones permitidas son: ' + colecciones }] })
     }
 
     switch (coleccion) {
@@ -180,19 +174,19 @@ searchData = async (req, res) => {
     
         default:
             return res.status(500).json({
-                message: `Esta opcion no esta contemplada.`
+                msg: `Esta opcion no esta contemplada.`
             })
     }
 
     res.status(500).send({
-        message: 'Error desconocido!',
+        msg: 'Error desconocido!',
     })
 
 }
 
 searchError = async (req, res) => {
     res.status(500).send({
-        message: 'Debes especificar una categoría y un término a buscar!',
+        msg: 'Debes especificar una categoría y un término a buscar!',
     })
 }
 

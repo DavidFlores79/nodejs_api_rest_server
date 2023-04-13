@@ -32,7 +32,7 @@ postData = async (req, res) => {
         await data1.save()
 
         res.status(201).send({
-            message: 'Registro creado correctamente.',
+            msg: 'Registro creado correctamente.',
             data
         });
         
@@ -63,7 +63,7 @@ updateData = async (req, res) => {
             new: true
         })
         res.send({
-           message: `Se ha actualizado el registro`,
+           msg: `Se ha actualizado el registro`,
            data
         });
         
@@ -90,7 +90,7 @@ deleteData = async (req, res) => {
             deleted: true
         }, { new: true })
         res.send({
-           message: `Se ha eliminado el registro.`,
+           msg: `Se ha eliminado el registro.`,
            data
         });        
     } catch (error) {   

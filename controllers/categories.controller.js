@@ -30,9 +30,7 @@ postData = async (req, res) => {
         //validar si existe La categoría
         const categoryExist = await categoryModel.findOne({ name: NAME })
         if( categoryExist) {
-            return res.status(400).send({
-                message: 'La categoría ya esta registrada.'
-            })
+            return res.status(400).send({ errors: [{ msg: 'La categoría ya esta registrada' }] })
         }
         
         //extraer usuario logueado del token
@@ -40,13 +38,13 @@ postData = async (req, res) => {
         const tokenData = await verifyToken(token)
 
         if(!tokenData) {
-            return res.status(401).send({message: 'Token no válido. *'})
+            return res.status(401).send({ errors: [{ msg: 'Token no válido' }] })
         }
     
         usuario = await userModel.findById(tokenData._id)
         if(!usuario.status || usuario.deleted || !usuario) {
-            res.status(401).send({ message: 'Usuario Bloqueado. Sin Permisos' })
             console.log('Usuario Bloqueado. Sin Permisos');
+            res.status(401).send({ errors: [{ msg: 'Usuario Bloqueado, sin Permisos' }] })
         } else {
 
             //id del usuario logueado
@@ -58,7 +56,7 @@ postData = async (req, res) => {
         }    
 
         res.status(201).send({
-            message: 'Registro creado correctamente.',
+            msg: 'Registro creado correctamente.',
             category
         });
         
@@ -84,7 +82,7 @@ updateData = async (req, res) => {
             new: true
         })
         res.send({
-           message: `Se ha actualizado el registro`,
+           msg: `Se ha actualizado el registro`,
            data
         });
         
@@ -110,7 +108,7 @@ deleteData = async (req, res) => {
             deleted: true
         }, { new: true })
         res.send({
-           message: `Se ha eliminado el registro.`,
+           msg: `Se ha eliminado el registro.`,
            data
         });        
     } catch (error) {   

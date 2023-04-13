@@ -12,22 +12,16 @@ const login = async (req, res) => {
         const user = await userModel.findOne({ email })
 
         if(!user) {
-            res.status(400).send({
-                message: 'Usuario/Password no son correctos - correo'
-            })
+            return res.status(400).send({ errors: [{ msg: 'Usuario/Password no son correctos - correo' }] })
         }
 
         if(!user.status) {
-            res.status(401).send({
-                message: 'Usuario bloqueado - status'
-            })
+           return res.status(401).send({ errors: [{ msg: 'Usuario Bloqueado - Estatus' }] })
         }
 
         const validPassword = bcryptjs.compareSync( password, user.password )
         if(!validPassword) {
-            res.status(400).send({
-                message: 'Usuario/Password no son correctos - pass'
-            })
+            return res.status(400).send({ errors: [{ msg: 'Usuario/Password no son correctos - pass' }] })
         }
 
         //generar el JWT
@@ -35,7 +29,7 @@ const login = async (req, res) => {
         console.log(`${user.name} se ha logueado correctamente!`);
 
         res.send({
-            message: 'login correcto',
+            msg: 'login correcto',
             user,
             jwt,
             
@@ -77,15 +71,13 @@ const googleSignIn = async(req, res) => {
             const newUser = new userModel( data )
             await newUser.save()
             res.send({
-                message: 'Google SignIn Correcto. Usuario creado',
+                msg: 'Google SignIn Correcto. Usuario creado',
                 newUser
             })
         }
 
         if(!user.status) {
-            res.status(401).send({
-                message: 'Usuario Bloqueado, favor de validar',
-            })
+            return res.status(401).send({ errors: [{ msg: 'Usuario Bloqueado, favor de validar' }] })
         }
 
 
@@ -99,7 +91,7 @@ const googleSignIn = async(req, res) => {
         console.log(`${userUpdated.name} se ha logueado correctamente con Google SignIn!`);
 
         res.send({
-            message: 'login correcto',
+            msg: 'login correcto',
             user,
             jwt,
             
