@@ -9,8 +9,8 @@ const productModel = require('../models/product.model');
 // Configuration 
 cloudinary.config({
   cloud_name: "dltvxi4tm",
-  api_key: "756749183381229",
-  api_secret: "_lUcHRvYEV8cT4ggHW1iiV_gVpw"
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 
